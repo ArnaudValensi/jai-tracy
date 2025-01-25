@@ -128,7 +128,14 @@ ___tracy_emit_frame_image :: (image: *void, w: u16, h: u16, offset: u8, flip: s3
 ___tracy_emit_plot :: (name: *u8, val: float64) #foreign TracyClientLib;
 ___tracy_emit_message_appinfo :: (txt: *u8, size: u64) #foreign TracyClientLib;
 
-#scope_module
+#scope_file
 
-// If you get an error here, run 'jai build.jai' to build the shared and dynamic libraries.
-TracyClientLib :: #library "TracyClient";
+#if OS == .WINDOWS {
+    TracyClientLib :: #library "win/TracyClient";
+} else #if OS == .LINUX {
+    TracyClientLib :: #library "linux/TracyClient";
+} else #if OS == .MACOS {
+    TracyClientLib :: #library "mac/TracyClient";
+}
+
+// You can do `jai build.jai` or `jai build.jai - -release` in this directory to rebuild the library.
